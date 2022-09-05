@@ -1,0 +1,48 @@
+{% extends "parent.html" %}
+{% load app_extras %}
+
+{%block title%}
+{{object.title}}
+{%endblock%}
+
+{%block name%}
+
+{%endblock%}
+{%block content%}
+
+    <img class="rounded float-left"  src="{{post.author.profile.image.url}}" width="30" height="30" >
+    <div class="margin">
+        <h2 class="article-title">{{object.title}}</h2>
+         <a href="{% url 'user-posts' object.author.username %}">{{object.author}}</a>
+        {{object.time}}
+        <figure>
+        <img class="col-auto" src="{{object.media.url}}" width="300" height="400">
+        <figcaption> {{object.caption|hashchange|linebreaks}} </figcaption>
+        </figure>
+
+        <audio width="400" height="200" controls>
+            <source
+        src="{{object.music.song.url}} "
+        type="audio/mpeg"
+            />
+            can't play audio.
+            </audio>
+
+      <hr>
+    </div>
+
+<div>
+    {% if object.author == user %}
+        <small class="btn btn-dark"> <a href="http://127.0.0.1:8000/post/{{post.id}}/update">Update your post.</a></small>
+        <small class="btn btn-dark"> <a href="http://127.0.0.1:8000/post/{{post.id}}/delete">Delete your post.</a></small>
+    {% endif %}
+</div>
+<style>
+    .margin{
+    margin: 70px;
+
+    }
+</style>
+
+
+{%endblock%}

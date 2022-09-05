@@ -1,0 +1,71 @@
+{% extends "parent.html" %}
+{% load crispy_forms_tags%}
+{% load app_extras %}
+
+{%block title%}
+Explore
+{%endblock%}
+
+{%block name%}
+explore
+{%endblock%}
+{%block content%}
+
+
+    {%for post in post%}
+
+    <div class="ui segment">
+        <img  class="rounded float-left" src="{{post.author.profile.image.url}}" width="30" height="30" >
+        <h2> <a class="article-title" href="http://127.0.0.1:8000/post/{{post.id}}/">{{post.title}} </a></h2>
+        <a href="{% url 'user-posts' post.author.username %}">{{post.author}}</a>
+        {{post.time}}
+        <figure>
+        <img class="col-auto" src="{{post.media.url}}" width="400" height="400">
+        <figcaption> {{post.caption|hashchange|linebreaks}} </figcaption>
+        </figure>
+
+        <audio width="400" height="200" class='fc-media' controls>
+            <source
+        src="{{post.music.song.url}} "
+        type="audio/mpeg"
+            />
+            can't play audio.
+            </audio>
+
+      <hr>
+    </div>
+
+<style>
+    .margin{
+    margin: 70px;
+
+    }
+</style>
+
+
+    {%endfor %}
+
+{% if is_paginated%}
+    {% if page_obj.has_previous %}
+        <a class="btn btn-outline-info mb-4 " href="?page=1">First</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{page_obj.previous_page_number}}"> <- </a>
+    {% endif%}
+
+    {% for num in page_obj.paginator.page_range %}
+        {%if page_obj.number == num %}
+            <a class="btn btn-info mb-4" href="?page={{num}}">{{num}}</a>
+
+        {%elif num > page_obj.number|add:"-3" and num < page_obj.number|add:"3"%}
+            <a class="btn btn-outline-info mb-4 " href="?page={{num}}">{{num}}</a>
+        {%endif%}
+
+
+    {% endfor %}
+    {% if page_obj.has_next %}
+        <a class="btn btn-outline-info mb-4 " href="?page={{page_obj.next_page_number}}">-></a>
+        <a class="btn btn-outline-info mb-4" href="?page={{page_obj.paginator.num_pages}}"> Last </a>
+    {% endif%}
+
+{%endif %}
+
+{%endblock%}

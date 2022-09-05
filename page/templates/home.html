@@ -1,0 +1,181 @@
+{% extends "parent.html" %}
+{% load app_extras %}
+{% load crispy_forms_tags%}
+{% crispy AddComment%}
+
+{%block title%}
+Home
+{%endblock%}
+
+{%block name%}
+home
+{%endblock%}
+{%block content%}
+    {%for post in post%}
+ <div class="col">
+    <div class="ui segment">
+
+        <div>
+         <img  class="rounded float-left" src="{{post.author.profile.image.url}}" width="30" height="30" >
+        <h2> <a style="margin : 5px" class="article-title" href="http://127.0.0.1:8000/post/{{post.id}}/">{{post.title}} </a></h2>
+        </div>
+
+        <a href="{% url 'user-posts' post.author.username %}">{{post.author}}</a>
+        {{post.time}}
+        <figure>
+        <img class="col-auto" src="{{post.media.url}}" width="400" height="400">
+        <figcaption> {{post.caption|hashchange|linebreaks}} </figcaption>
+        </figure>
+
+        <audio width="400" height="200" class='fc-media' controls>
+            <source
+        src="{{post.music.song.url}} "
+        type="audio/mpeg"
+            />
+            can't play audio.
+            </audio>
+
+</br>
+        {%if post.comment.all %}
+         <details>
+                  <summary>
+                    Comments
+                    <span class="icon"></span>
+                  </summary>
+
+                  <p>
+                      {%for comment in post.comment.all%}
+                        {%if comment.parent is None%}
+
+                      <img  class="rounded float-left" src="{{comment.user.profile.image.url}}" width="30" height="30" >
+                      {{comment.user}}
+                      {{comment.created}}
+                      </br>
+                      {{comment.content}}
+
+                    <details>
+                        <summary>
+                            reply
+                            <span class="icon"></span>
+                        </summary>
+                      <div class="form-group">
+
+                         <form method="post">
+                             <input type='hidden' value='{{comment.id}}' name='parent'>
+                             <input type='hidden' value='{{post.pk}}' name='pk'>
+                             {%csrf_token %}
+                             {{form|crispy}}
+                             <button class="btn btn-dark" type="submit">post</button>
+
+                         </form>
+                        </div>
+                      </details>
+                        {%if comment.children%}
+                       <details style="margin : 20 px">
+                            <summary>
+                                Replies
+                                <span class="icon"></span>
+                            </summary>
+                            <p >
+
+                                {%for child in comment.children%}
+
+                                    <hr >
+                                      <img  class="rounded float-left" src="{{child.user.profile.image.url}}" width="30" height="30" >
+                                     {{child.user}}
+                                      {{child.created}}
+                                      </br>
+                                      {{child.content}}
+                            <details>
+                                <summary>
+                                    reply
+                                    <span class="icon"></span>
+                                </summary>
+                                    <div class="form-group">
+                                        <form method="post">
+                                            <input type='hidden' value='{{child.id}}' name='parent'>
+                                            <input type='hidden' value='{{post.pk}}' name='pk'>
+                                            {%csrf_token %}
+                                            {{form|crispy}}
+                                            <button class="btn btn-dark" type="submit">post</button>
+
+                                        </form>
+                                    </div>
+                            </details>
+                                {% include "comment.html" with comment=child %}
+                                {%endfor%}
+
+                            </p>
+                        </details>
+                        {%endif%}
+
+
+             {%endif%}
+             {%endfor%}
+
+                  </p>
+
+
+         </details>
+         {%endif%}
+
+        <div class="replied-comments container mt-2">
+               <div class="form-group">
+                 <form method="post">
+                     <input type='hidden' value='{{post.pk}}' name='pk'>
+                     {%csrf_token %}
+                     {{form|crispy}}
+                     <button class="btn btn-dark" type="submit">post</button>
+
+                 </form>
+             </div>
+        </div>
+
+
+
+
+
+      <hr>
+    </div>
+
+
+ </div>
+
+<style>
+    .margin{
+    margin: 70px;
+
+    }
+    .asteriskField {
+    display: none;
+}
+</style>
+
+
+{%endfor %}
+
+{% if is_paginated%}
+    {% if page_obj.has_previous %}
+        <a class="btn btn-outline-info mb-4 " href="?page=1">First</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{page_obj.previous_page_number}}"> <- </a>
+    {% endif%}
+
+    {% for num in page_obj.paginator.page_range %}
+        {%if page_obj.number == num %}
+            <a class="btn btn-info mb-4" href="?page={{num}}">{{num}}</a>
+
+        {%elif num > page_obj.number|add:"-3" and num < page_obj.number|add:"3"%}
+            <a class="btn btn-outline-info mb-4 " href="?page={{num}}">{{num}}</a>
+        {%endif%}
+
+
+    {% endfor %}
+    {% if page_obj.has_next %}
+        <a class="btn btn-outline-info mb-4 " href="?page={{page_obj.next_page_number}}">-></a>
+        <a class="btn btn-outline-info mb-4" href="?page={{page_obj.paginator.num_pages}}"> Last </a>
+    {% endif%}
+
+{%endif %}
+
+{%endblock%}
+

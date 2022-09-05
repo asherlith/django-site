@@ -1,0 +1,25 @@
+{% extends "parent.html"%}
+
+
+{%block title%}delete post {%endblock%}
+{%block name%} Delete Post {%endblock%}
+
+{%block content%}
+<div class="content-section">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4"> delete your post.</legend>
+
+        </fieldset>
+
+        <div class="form-group">
+            <p>Are you sure you want to delete "{{post.title}}"?</p>
+            <button class="btn btn-outline-danger" type="submit">yes!</button>
+            <a class="btn btn-outline-secondary " href="http://127.0.0.1:8000/post/{{post.id}}" >Cancel</a>
+        </div>
+
+    </form>
+
+</div>
+{%endblock%}

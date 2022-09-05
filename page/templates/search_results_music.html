@@ -1,0 +1,59 @@
+{% extends "parent.html"%}
+{% load app_extras %}
+
+{%block title%}search result {%endblock%}
+{%block name%} Results {%endblock%}
+
+{%block content%}
+<div class="content-section">
+   {%if searched%}
+    Song names:
+    </br>
+    {%if song_name%}
+      {%for song_name in song_name%}
+        {{song_name.name}}
+        </br>
+        {{song_name.singer}}
+
+            <audio width="400" height="200" class='fc-media' controls>
+            <source
+        src="{{song_name.song.url}} "
+        type="audio/mpeg"
+            />
+            can't play audio.
+            </audio>
+            <hr>
+      {%endfor%}
+    {%else%}
+        No songs found by this name.
+    {%endif%}
+
+
+    Song singer names:
+    </br>
+    {%if song_singer%}
+        {%for song_singer in song_singer%}
+
+            {{song_singer.name}}
+            </br>
+            {{song_singer.singer}}
+            <audio width="400" height="200" class='fc-media' controls>
+            <source
+        src="{{song_singer.song.url}} "
+        type="audio/mpeg"
+            />
+            can't play audio.
+            </audio>
+        <hr>
+      {%endfor%}
+    {%else%}
+    No singer by this name.
+    {%endif%}
+
+   {%else%}
+      please search for something.
+   {% endif %}
+
+
+</div>
+{%endblock%}

@@ -1,0 +1,22 @@
+{% extends "parent.html"%}
+{% load app_extras %}
+
+
+{%block title%}search result {%endblock%}
+{%block name%} Results {%endblock%}
+
+{%block content%}
+<div class="content-section">
+   {%if searched%}
+      {%for obj in obj %}
+            <img  class="rounded float-left" src="{{obj.profile.image.url}}" width="30" height="30" >
+           <a style="margin : 10px " href="{%url 'user-posts' obj.username %}"> {{obj.username}}</a>
+            <hr>
+      {%endfor%}
+   {%else%}
+      please search for something.
+   {% endif %}
+
+
+</div>
+{%endblock%}

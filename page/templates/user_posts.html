@@ -1,0 +1,95 @@
+{% extends "parent.html" %}
+{% load app_extras %}
+
+
+{%block title%}
+posts
+{%endblock%}
+
+{%block name%}
+{{view.kwargs.username}}'s Posts
+{%endblock%}
+{%block content%}
+
+{% if user != user2 %}
+    <form method="post">
+        {% csrf_token%}
+        {% if not follow %}
+        <button  class="btn btn-dark" type="submit">follow</button>
+        {%endif%}
+    </form>
+    <form method="post">
+        {% csrf_token %}
+        {%if  follow %}
+        <button  class="btn btn-dark"type="submit">unfollow</button>
+        {%endif%}
+
+    </form>
+{%endif%}
+
+<div >
+    <p>
+        <a href="http://127.0.0.1:8000/user/{{view.kwargs.username}}/follower/">follower</a>: {{user2.profile.following}}
+        <a href="http://127.0.0.1:8000/user/{{view.kwargs.username}}/following/">following</a>: {{user2.profile.follower}}
+    </p>
+
+</div>
+
+<small class="mb-3">Total Posts: ({{page_obj.paginator.count}})</small>
+    {%for post in post%}
+
+    <div class="margin">
+        <img  class="rounded float-left" src="{{post.author.profile.image.url}}" width="30" height="30" >
+        <h2> <a class="article-title" href="http://127.0.0.1:8000/post/{{post.id}}/">{{post.title}} </a></h2>
+        <a href="#">{{post.author}}</a>
+        {{post.time}}
+        <figure>
+        <img class="col-auto" src="{{post.media.url}}" width="400" height="400">
+        <figcaption> {{post.caption|hashchange|linebreaks}} </figcaption>
+        </figure>
+
+        <audio width="400" height="200" controls>
+            <source
+        src="{{post.music.url}} "
+        type="audio/mpeg"
+            />
+            can't play audio.
+            </audio>
+
+      <hr>
+    </div>
+
+<style>
+    .margin{
+    margin: 70px;
+
+    }
+</style>
+
+
+    {%endfor %}
+
+{% if is_paginated%}
+    {% if page_obj.has_previous %}
+        <a class="btn btn-outline-info mb-4 " href="?page=1">First</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{page_obj.previous_page_number}}"> <- </a>
+    {% endif%}
+
+    {% for num in page_obj.paginator.page_range %}
+        {%if page_obj.number == num %}
+            <a class="btn btn-info mb-4" href="?page={{num}}">{{num}}</a>
+
+        {%elif num > page_obj.number|add:"-3" and num < page_obj.number|add:"3"%}
+            <a class="btn btn-outline-info mb-4 " href="?page={{num}}">{{num}}</a>
+        {%endif%}
+
+
+    {% endfor %}
+    {% if page_obj.has_next %}
+        <a class="btn btn-outline-info mb-4 " href="?page={{page_obj.next_page_number}}">-></a>
+        <a class="btn btn-outline-info mb-4" href="?page={{page_obj.paginator.num_pages}}"> Last </a>
+    {% endif%}
+
+{%endif %}
+
+{%endblock%}

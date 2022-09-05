@@ -1,0 +1,20 @@
+{% extends "parent.html" %}
+{%block title%}
+Followers
+{%endblock%}
+
+{%block name%}
+{{view.kwargs.username}}'s followers
+{%endblock%}
+{%block content%}
+    {%for follow in follow%}
+<div class="margin">
+    <div>
+        <a href="http://127.0.0.1:8000/user/{{follow.user.username}}/"><img  class="rounded float-left" src="{{follow.user.profile.image.url}}" width="30" height="30" ></a>
+        <a style="margin: 10px" href="http://127.0.0.1:8000/user/{{follow.user.username}}/">{{follow.user}}</a>
+        <hr>
+    </div>
+
+</div>
+    {%endfor %}
+{%endblock%}

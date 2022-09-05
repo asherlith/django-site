@@ -1,0 +1,44 @@
+{% load crispy_forms_tags%}
+
+{%if comment.children%}
+                       <details style="margin: 20px">
+                            <summary>
+                                Replies
+                                <span class="icon"></span>
+                            </summary>
+                            <p >
+
+                                {%for child in comment.children%}
+
+                                    <hr>
+                                      <img  class="rounded float-left" src="{{child.user.profile.image.url}}" width="30" height="30" >
+                                     {{child.user}}
+                                      {{child.created}}
+                                      </br>
+                                      {{child.content}}
+                                <details>
+                                <summary>
+                                    reply
+                                    <span class="icon"></span>
+                                </summary>
+                                    <div class="form-group">
+                                        <form method="post">
+                                            <input type='hidden' value='{{child.id}}' name='parent'>
+                                            <input type='hidden' value='{{post.pk}}' name='pk'>
+                                            {%csrf_token %}
+                                            {{form|crispy}}
+                                            <button class="btn btn-dark" type="submit">post</button>
+
+                                        </form>
+                                    </div>
+                            </details>
+                                {% include "comment.html" with comment=child %}
+
+                                {%endfor%}
+
+                            </p>
+                        </details>
+{%endif%}
+
+
+

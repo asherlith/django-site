@@ -1,0 +1,44 @@
+{% extends "parent.html" %}
+{% load app_extras %}
+{% load crispy_forms_tags%}
+
+
+{%block title%}
+Music Player
+{%endblock%}
+
+{%block name%}
+music player
+{%endblock%}
+
+{%block content%}
+<div>
+    <form class="d-flex" method="post" action="{%url 'search-results-music' %}">
+        {%csrf_token %}
+        <input class="form-control me-2" type="search" placeholder="Search" name="searched" >
+        <button class="btn btn-dark">Search</button>
+        {{form|crispy}}
+
+    </form>
+    <br>
+</div>
+{%for song in songs%}
+
+{{song.name}}
+</br>
+{{song.singer}}
+<audio width="400" height="200" class='fc-media' controls>
+            <source
+
+        src="{{song.song.url}} "
+        type="audio/mpeg"
+            />
+            can't play audio.
+            </audio>
+
+
+<hr>
+{%endfor%}
+
+{%endblock%}
+
